@@ -5,6 +5,7 @@
 """
 
 # Serial Insertion Sort 
+# Source: http://interactivepython.org/courselib/static/pythonds/SortSearch/TheInsertionSort.html
 def insertionSort(alist):
    for index in range(1,len(alist)):
 
