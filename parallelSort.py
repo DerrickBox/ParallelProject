@@ -7,13 +7,18 @@
 import multiprocessing as mp
 import time
 import random
-from bubbleSort import bubbleSort
+from bubbleSort import multiBubbleSort
+from insertionSort import multiInsertionSort
+
+
+PARENT = 0
+CHILD = 1
 
 
 dataSize = 100
-numProc = 1
+sort = [multiBubbleSort, multiInsertionSort]
+sortName = ["Bubble Sort", "Insertion Sort"]
 
-bubbleSortID = 0
 
 
 """
@@ -44,6 +49,7 @@ def duplicateList(aList, size):
 def printLists(aList):
     #print("-> parallelSort.py -> printLists()")
     for i in range(len(aList)):
+        print(sortName[i])
         print(aList[i])
      
         
@@ -53,31 +59,36 @@ def printLists(aList):
 def main():
     #print("-> parallelSort.py -> main()")
     # Generate the list of numbers [1, dataSize] shuffled identically for each sorting algorithm
-    dataList = generateLists(dataSize, numProc)
+    dataList = generateLists(dataSize, len(sort))
     printLists(dataList) # print for debugging generated lists of numbers
     
     # Sort lists using parallel processing
-    # Setup pipe connection for communication between processes
-    conn = [["",""] for i in range(numProc)]
-    for i in range(numProc):
-        conn[i][0], conn[i][1] = mp.Pipe()
-        
-    processes = []
-    processes.append(mp.Process(target = bubbleSort, args = [conn[bubbleSortID][1], dataList[bubbleSortID],]))
-    
     startTime = time.time()
+    # Setup pipe connection for communication between processes
+    conn = [["",""] for i in range(len(sort))]
+    for i in range(len(sort)):
+        conn[i][PARENT], conn[i][CHILD] = mp.Pipe()
+    
+    # Initialize processes for sorting algorithms
+    processes = []
+    for i in range(len(sort)):
+        processes.append(mp.Process(target = sort[i], args = [conn[i][CHILD], dataList[i],]))
     for p in processes: 
         p.start()
     
-    response = [0 for i in range(numProc)]
-    response[bubbleSortID] = conn[bubbleSortID][0].recv()
+    # Recieve results from processes through Pipe
+    response = [0 for i in range(len(sort))]
+    for i in range(len(sort)):
+        response[i] = conn[i][PARENT].recv()
     
+    # Join processes at end of multiprocessing section
     for p in processes: 
         p.join()
-    
     endTime = time.time()
-    
-    dataList[bubbleSortID] = response[bubbleSortID][0]
+
+    # load sorted lists and completions times from responses
+    for i in range(len(sort)):
+        dataList[i] = response[i][0]
     
     printLists(dataList)
     elapsedTime = endTime - startTime
