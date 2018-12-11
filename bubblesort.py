@@ -8,9 +8,8 @@ import multiprocessing as mp
 import time
 
 
-# Sort a list of elements using bubble sort then send the results to the parent process
-def bubbleSort(conn, aList):
-    #print("-> bubblesort.py -> bubbleSort()")
+def serialBubbleSort(aList):
+    #print("-> bubblesort.py -> serialBubbleSort()")
     #print(aList)
     startTime = time.time()
     noSwap = False
@@ -26,7 +25,14 @@ def bubbleSort(conn, aList):
     endTime = time.time()
     print("Bubble Sort Completed")
     #print(aList)
-    conn.send([aList, endTime - startTime])
+    return endTime - startTime
+
+
+# Sort a list of elements using bubble sort then send the results to the parent process
+def multiBubbleSort(conn, aList):
+    #print("-> bubblesort.py -> multiBubbleSort()")
+    elapsedTime = serialBubbleSort(aList)
+    conn.send([aList, elapsedTime])
     conn.close()
 
 
@@ -36,8 +42,9 @@ def main():
     lst = [i for i in range(100)]
     random.shuffle(lst)
     print(lst)
-    bubbleSort(lst)
+    serialBubbleSort(lst)
     print(lst)
+
 
 if __name__ == "__main__":
     main()
