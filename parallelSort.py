@@ -4,20 +4,21 @@
 * Group 2
 * Parallel Sort
 """
+import sys
 import multiprocessing as mp
 import time
 import random
 from bubbleSort import multiBubbleSort
 from insertionSort import multiInsertionSort
+from quickSort import multiQuickSort
 
 
 PARENT = 0
 CHILD = 1
 
 
-dataSize = 100
-sort = [multiBubbleSort, multiInsertionSort]
-sortName = ["Bubble Sort", "Insertion Sort"]
+sort = [multiBubbleSort, multiInsertionSort, multiQuickSort]
+sortName = ["Bubble Sort", "Insertion Sort", "Quick Sort"]
 
 
 
@@ -56,11 +57,16 @@ def printLists(aList):
 """
 * main
 """
-def main():
+def main(argv):
     #print("-> parallelSort.py -> main()")
+    # Set the data size from the command line
+    dataSize = 100
+    if len(argv) > 1:
+        dataSize = int(argv[1])
+
     # Generate the list of numbers [1, dataSize] shuffled identically for each sorting algorithm
     dataList = generateLists(dataSize, len(sort))
-    printLists(dataList) # print for debugging generated lists of numbers
+    #printLists(dataList) # print for debugging generated lists of numbers
     
     # Sort lists using parallel processing
     startTime = time.time()
@@ -86,14 +92,17 @@ def main():
         p.join()
     endTime = time.time()
 
-    # load sorted lists and completions times from responses
+    # load sorted lists and completions times from responses and output results
+    elapsedTime = [0 for i in range(len(sort))]
     for i in range(len(sort)):
         dataList[i] = response[i][0]
-    
-    printLists(dataList)
-    elapsedTime = endTime - startTime
-    print("Total Time Elapsed:", elapsedTime)
+        elapsedTime[i] = response[i][1]
+    print()
+    for i in range(len(dataList)):
+        print(sortName[i], "Elapsed Time:", elapsedTime[i])
+        #print(dataList[i])
+    print("\nTotal Time Elapsed:", endTime - startTime)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[0:])
