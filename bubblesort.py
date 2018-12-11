@@ -1,33 +1,38 @@
-# -*- coding: utf-8 -*-
 """
-Created on Fri Nov 30 14:40:01 2018
-
-@author: rjenk
-
-CSC 338 Group Project
-
-BubbleSort.py
+* Ryan Jenkins
+* CSC 338 Group Project: Group 2
+* bubbleSort.py
 """
 import random
-import numpy as np
+import multiprocessing as mp
+import time
 
-# Take a list of elements and sort them using bubble sort
-def bubbleSort(dataList):
-    length = len(dataList)
+
+# Sort a list of elements using bubble sort then send the results to the parent process
+def bubbleSort(conn, aList):
+    #print("-> bubblesort.py -> bubbleSort()")
+    #print(aList)
+    startTime = time.time()
     noSwap = False
     while not noSwap:
         swapped = False
-        for i in range(1, length):
-            if dataList[i - 1] > dataList[i]:
-                dataList[i - 1], dataList[i] = dataList[i], dataList[i - 1]
+        for index in range(1, len(aList)):
+            if aList[index - 1] > aList[index]:
+                aList[index - 1], aList[index] = aList[index], aList[index - 1]
                 swapped = True
-        --length
+        --len(aList)
         if not swapped:
             noSwap = True
+    endTime = time.time()
+    print("Bubble Sort Completed")
+    #print(aList)
+    conn.send([aList, endTime - startTime])
+    conn.close()
 
 
-# Main function call to test functionality of bubble sort
+# Main function call to test functionality of bubble bubbleSort
 def main():
+    print("-> bubblesort.py -> main()")
     lst = [i for i in range(100)]
     random.shuffle(lst)
     print(lst)
