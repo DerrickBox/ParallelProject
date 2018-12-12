@@ -22,7 +22,7 @@ def insertionSort(alist):
 	
 def multiInsertionSort(conn, alist):	
     startTime = time.time()	
-    alist = serialInsertionSort(alist)	
+    alist = insertionSort(alist)	
     endTime = time.time()	
     print("Insertion Sort Completed")	
     conn.send([alist, endTime - startTime])	
@@ -33,7 +33,7 @@ def main():
 	alist = [54, 26, 93, 17, 77, 31, 44, 55, 20, 100, -1, 8, 33, 33, 55, 0, 3, 90, 100000, 4444, -33]
 	print("Unsorted:", alist)	
 		
-	serialSortedList = serialInsertionSort(alist)	
+	serialSortedList = insertionSort(alist)	
 	endTime = time.time()	
 	totalTime = endTime - startTime	
 		
