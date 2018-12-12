@@ -12,15 +12,19 @@ from bubbleSort import multiBubbleSort
 from insertionSort import multiInsertionSort
 from quickSort import multiQuickSort
 from mergeSort import multiMergeSort
+from selection_sort import multiSelectionSort
 from numberGen import generateLists
 
+
+
+numTests = 10
 
 PARENT = 0
 CHILD = 1
 
 
-sort = [multiBubbleSort, multiInsertionSort, multiQuickSort, multiMergeSort]
-sortName = ["Bubble Sort", "Insertion Sort", "Quick Sort", "Merge Sort"]
+sort = [multiBubbleSort, multiInsertionSort, multiQuickSort, multiMergeSort, multiSelectionSort]
+sortName = ["Bubble Sort", "Insertion Sort", "Quick Sort", "Merge Sort", "Selection Sort"]
 
 
 """
@@ -38,7 +42,15 @@ def printLists(aList):
 """
 def main(argv):
     #print("-> parallelSort.py -> main()")
-    # Set the data size from the command line
+    
+    #
+    """
+    runTime = [0 for i in range(len(sort))]
+    for i in range(len(sort)):
+        runTime = [0 for i in range(numTests)]
+    """
+    
+    # Set the command line parameters
     dataSize = 100
     shuffleSync = True
     listType = 0
