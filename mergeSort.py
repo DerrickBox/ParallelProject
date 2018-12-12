@@ -1,5 +1,15 @@
 import math, random
 import multiprocessing as mp
+import time
+
+
+def multiMergeSort(conn, aList):
+    startTime = time.time()
+    aList = sort(aList, 0, len(aList)-1)
+    endTime = time.time()
+    print("Merge Sort Completed")
+    conn.send([aList, endTime - startTime])
+    conn.close()
 
 def process_start(a):
     q = mp.Queue()

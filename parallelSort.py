@@ -11,6 +11,7 @@ import random
 from bubbleSort import multiBubbleSort
 from insertionSort import multiInsertionSort
 from quickSort import multiQuickSort
+from mergeSort import multiMergeSort
 from numberGen import generateLists
 
 
@@ -18,8 +19,8 @@ PARENT = 0
 CHILD = 1
 
 
-sort = [multiBubbleSort, multiInsertionSort, multiQuickSort]
-sortName = ["Bubble Sort", "Insertion Sort", "Quick Sort"]
+sort = [multiBubbleSort, multiInsertionSort, multiQuickSort, multiMergeSort]
+sortName = ["Bubble Sort", "Insertion Sort", "Quick Sort", "Merge Sort"]
 
 
 """
@@ -39,11 +40,19 @@ def main(argv):
     #print("-> parallelSort.py -> main()")
     # Set the data size from the command line
     dataSize = 100
+    shuffleSync = True
+    listType = 0
+    lower = -500
+    upper = 500
     if len(argv) > 1:
         dataSize = int(argv[1])
+        shuffleSync = bool(argv[2])
+        listType = int(argv[3])
+        lower = int(argv[4])
+        upper = int(argv[5])
 
     # Generate the list of numbers [1, dataSize] shuffled identically for each sorting algorithm
-    dataList = generateLists(dataSize, len(sort), True, 0, 0, 0)# (size, quantity, shuffleSync, listType, lower, upper)
+    dataList = generateLists(dataSize, len(sort), shuffleSync, listType, lower, upper)# (size, quantity, shuffleSync, listType, lower, upper)
     #printLists(dataList) # print for debugging generated lists of numbers
     
     # Sort lists using parallel processing
