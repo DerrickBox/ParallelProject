@@ -3,11 +3,12 @@
 * Group 2
 * Insertion Sort 
 """
-
 import time 
 import multiprocessing as mp
 
+
 numProc = 4 #	Starting number of Processes
+
 
 # Serial Insertion Sort 
 # Slightly modified from: http://interactivepython.org/courselib/static/pythonds/SortSearch/TheInsertionSort.html
@@ -22,18 +23,16 @@ def serialInsertionSort(alist):
 
 		alist[position] = currentvalue
 	return alist
-	
-def multiInsertionSort(alist): 
-	for index in range(1,len(alist)):
-		currentvalue = alist[index]
-		position = index
 
-		while position > 0 and alist[position - 1] > currentvalue:
-			alist[position] = alist[position - 1]
-			position = position - 1
 
-		alist[position] = currentvalue
-	return alist
+def multiInsertionSort(conn, alist):
+    startTime = time.time()
+    alist = serialInsertionSort(alist)
+    endTime = time.time()
+    print("Insertion Sort Completed")
+    conn.send([alist, endTime - startTime])
+    conn.close()
+
 
 def main():
 	startTime = time.time()
@@ -49,7 +48,8 @@ def main():
 	print("Execution time: {} seconds".format(totalTime))
 
 	# Multiprocessing Calls
-	processes = []
+	"""
+    processes = []
 	for i in range(numProc):
 		p = mp.Process(target = multiInsertionSort, args = [alist,])
 		processes.append(p)
@@ -60,7 +60,7 @@ def main():
 		p.join()
 	
 	#print("Multiprocessing Sorted:", multiSortedList)
-		
+	"""
 	
 if __name__ == "__main__":
     main()
